@@ -2,20 +2,14 @@ import React from 'react'
 
 class TimelineItem extends React.Component {
 
-    getList(purchase){
-        Object.keys(purchase).map(function(key, i) {
-            return <li key={i}><span key={i}>{purchase[key]}</span></li>;
-        });
-    };
     render() {
-        return
-            {Object.keys(purchase).map((keyName, i) => (
-            <li key={i}>
-                <span>key: {i} Name: {purchase[keyName]}</span>
-            </li>
-        ))}
-            
+        const events = this.props.data
         
+        return events.map((events) => (
+        <tr key={events.custom_data.key}>{events.custom_data.map((custom_data) => <td>{custom_data.value}</td> )}</tr>
+        ))
+
+        //return events.map((events) => console.log("evento: ", events.event,  events.timestamp, events.custom_data))
     }
 }
 

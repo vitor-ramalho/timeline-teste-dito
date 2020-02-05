@@ -6,7 +6,7 @@ import clock from './assets/clock.svg'
 import money from './assets/money.svg'
 import place from './assets/place.svg'
 
-//import TimelineItem from './TimelineItem'
+import TimelineItem from './TimelineItem'
 // import TimelineData from '../data'
 
 const Timeline = () => {
@@ -51,7 +51,7 @@ const Timeline = () => {
 
     const findPurchaseProducts = ({ purchases, products }) => {
         return purchases.map((purchase) => {
-            console.log(purchase)
+            //console.log(purchases)
             return { ...purchase, products: products.filter(product => product.custom_data.transaction_id === purchase.custom_data.transsaction_id) };
         });
     };
@@ -64,12 +64,7 @@ const Timeline = () => {
                 "Loading..."
             ) : (
                     manipulateData(data).map((purchase, index) => {
-                        console.log(manipulateData)
-                        const listItens = purchase.events.map(function (buy, idx) {
-                            return (
-                                <li key={idx}>{buy.event}</li>
-                            );
-                        })
+
                         return (
                             <List>
                                 <li className="timeline-left" key={index}>
@@ -92,9 +87,7 @@ const Timeline = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <div>
-                                                        {listItens}
-                                                    </div>
+                                                    
                                                 </tbody>
                                             </Table>
                                         </Body>
