@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Moment from 'moment'
 import { List, Header, Body, Table } from './components';
 import calendar from './assets/calendar.svg'
 import check from './assets/check.svg'
@@ -7,7 +8,6 @@ import money from './assets/money.svg'
 import place from './assets/place.svg'
 
 import TimelineItem from './TimelineItem'
-// import TimelineData from '../data'
 
 const Timeline = () => {
     const [data, setData] = useState({});
@@ -36,23 +36,23 @@ const Timeline = () => {
             purchases: [],
             products: []
         });
-
         return findPurchaseProducts(eventsReducer);
 
 
     }
 
     const purchasesAndProductsReducer = (accumulator, currentValue) => {
-        currentValue.event === 'comprou-produto' ? accumulator.products.push(currentValue) : accumulator.purchases.push(currentValue)
-
+        if (currentValue.event === 'comprou-produto') {
+            accumulator.products.push({ transaction: currentValue.custom_data.find(o => o.key === "transaction_id").value, name: currentValue.custom_data.find(o => o.key === "product_name").value, price: currentValue.custom_data.find(o => o.key === "product_price").value });
+        } else {
+            accumulator.purchases.push({ transaction: currentValue.custom_data.find(o => o.key === "transaction_id").value, revenue: currentValue.revenue, date: currentValue.timestamp, store_name: currentValue.custom_data.find(o => o.key === "store_name").value })
+        }
         return { ...accumulator }
-
     }
 
     const findPurchaseProducts = ({ purchases, products }) => {
         return purchases.map((purchase) => {
-            //console.log(purchases)
-            return { ...purchase, products: products.filter(product => product.custom_data.transaction_id === purchase.custom_data.transsaction_id) };
+            return { ...purchase, products: products.filter(product => product.transaction === purchase.transaction) };
         });
     };
 
@@ -66,17 +66,17 @@ const Timeline = () => {
                     manipulateData(data).map((purchase, index) => {
 
                         return (
-                            <List>
-                                <li className="timeline-left" key={index}>
+                            <List key={index}>
+                                <li className="timeline-left">
                                     <div className="timeline-badge">
                                         <img src={check} alt="check" />
                                     </div>
                                     <div className="timeline-panel">
                                         <Header>
-                                            <div><img src={calendar} alt="calendar" /></div>
-                                            <div><img src={clock} alt="clock" /> </div>
-                                            <div><img src={place} alt="place" /> </div>
-                                            <div><img src={money} alt="money" /> </div>
+                                            <div><img src={calendar} alt="calendar" />{Moment(purchase.date).format('DD/MM/YY')}</div>
+                                            <div><img src={clock} alt="clock" />{Moment(purchase.date).format('hh:mm')} </div>
+                                            <div><img src={place} alt="place" />{purchase.store_name}</div>
+                                            <div><img src={money} alt="money" />{'R$ ' + purchase.revenue}</div>
                                         </Header>
                                         <Body>
                                             <Table>
@@ -87,7 +87,7 @@ const Timeline = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    
+                                                    <TimelineItem products= {purchase.products}/>
                                                 </tbody>
                                             </Table>
                                         </Body>

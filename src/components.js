@@ -43,7 +43,7 @@ const List = styled.ul`
               position: relative;
               margin: 0;
               padding: 0;
-              -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
+              -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.175);
               box-shadow: 0 1px 6px rgba(0, 0, 0, 0.175);
               &:before {
                 position: absolute;
